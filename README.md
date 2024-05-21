@@ -5,4 +5,7 @@ StormSpyder is a web scraping tool designed to access the latest tropical storm 
 ### Contact Information
 
 Algorithm creator: Jess Rapson
+
 Creator contact email: jessicakristenr@gmail.com
+
+Date last reviewed: May 21, 2024
