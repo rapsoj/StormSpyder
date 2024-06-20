@@ -12,11 +12,11 @@ StormSpyder scrapes the [ECMWF tropical storm genesis website](https://charts.ec
 
 These strike probabilities are then intersected with a 2.km resolution gridden population map to calcualte the expected number of people impactd by the storm events (equal to the forecasted probabilities multiplied by the population in the regions that intersect with the forecasted storm).
 
-![pop_map](gridded-pop-map.png)
+![pop_map](images/gridded-pop-map.png)
 
 The names of the countries that are affected by each forecasted storm are also extracted, using a global administrative boundaries map.
 
-![country_map](country-map.png)
+![country_map](images/country-map.png)
 
 StormSpyder runs on an Amazon Web Services (AWS) instance and issues storm alerts via email every morning at 6.00 GMT.
 
