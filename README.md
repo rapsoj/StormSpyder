@@ -10,11 +10,19 @@ StormSpyder scrapes the [ECMWF tropical storm genesis website](https://charts.ec
 
 ![website](images/website.png)
 
-StormSpyder runs on an Amazon Web Services (AWS) instance. 
+These strike probabilities are then intersected with a 2.km resolution gridden population map to calcualte the expected number of people impactd by the storm events (equal to the forecasted probabilities multiplied by the population in the regions that intersect with the forecasted storm).
+
+![pop_map](gridded-pop-map.png)
+
+The names of the countries that are affected by each forecasted storm are also extracted, using a global administrative boundaries map.
+
+![country_map](country-map.png)
+
+StormSpyder runs on an Amazon Web Services (AWS) instance and issues storm alerts via email every morning at 6.00 GMT.
 
 ## Information Contained in the Alert
 
-The alerts go out every morning at 6.00 GMT. They calculate the expected impact of the every ECMWF-forecast storm on the local population, as this is the most relevant information for action (calculating only land intersections wouldn't identify which storm events impact the most people). Expected impact is equal to the probability band of the storm event multiplied by the values of the population grid that the band intersects with. So for example, a band in the 10-20% range (red) that intersects with a population of one million would be calculated to have an expected impact of 0.15 * 1,000,000 = 150,000. The total expected impact for a storm event is the sum of these probability * population intersections for each probability band in a given storm event. This is the expected number of people who would be "impacted" in some way by the storm event.
+StormSpyder alerts report the expected impact of every ECMWF-forecast storm on the local population, as this is the most relevant information for action (calculating only land intersections wouldn't identify which storm events impact the most people). Expected impact is equal to the probability band of the storm event multiplied by the values of the population grid that the band intersects with. So for example, a band in the 10-20% range (red) that intersects with a population of one million would be calculated to have an expected impact of 0.15 * 1,000,000 = 150,000. The total expected impact for a storm event is the sum of these probability * population intersections for each probability band in a given storm event. This is the expected number of people who would be "impacted" in some way by the storm event.
 
 ![website](images/strike-probability.png)
 
