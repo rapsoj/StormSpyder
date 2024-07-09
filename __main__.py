@@ -358,12 +358,16 @@ def get_key_by_value(d, value):
 # Define function to format regions for subject line
 def format_regions(arr):
     length = len(arr)
-    if length == 1:
+    if length == 0:
+        return "unclaimed territories"
+    elif length == 1:
         return arr[0]
     elif length == 2:
         return f"{arr[0]} and {arr[1]}"
     elif length == 3:
         return f"{arr[0]}, {arr[1]}, and {arr[2]}"
+    elif length == 4:
+        return f"{arr[0]}, {arr[1]}, {arr[2]}, and one other country"
     else:
         return f"{arr[0]}, {arr[1]}, {arr[2]}, and {length - 3} other countries"
 
@@ -375,12 +379,27 @@ def format_impact(num):
     elif num > 1000:
         return str(round(num / 1000, 1)) + "K"
     else:
-        return num
+        return int(round(num, 0))
+
+
+# Define function to format alert text
+def format_alert(df_all, n):
+
+    # Extract information for alert
+    n_impact = df_all.sort_values('expected_impact', ascending=False).iloc[n]
+    storm_type = n_impact['storm_type']
+    regions = format_regions(n_impact['regions'])
+    impact = format_impact(n_impact['expected_impact'])
+    date = n_impact['date']
+
+    # Combine information into alert
+    alert = f"{storm_type.capitalize()} alert: {impact} estimated impacted in {regions} on {date}"
+
+    return alert
 
 
 # Define function to send email alert
 def send_email_alert(df_all, storm_type_options):
-
     # Create dataframe for storm events that intersect with populated areas
     today_date = datetime.today().strftime('%Y-%m-%d')
     data = df_all.sort_values('expected_impact', ascending=False)
@@ -397,32 +416,43 @@ def send_email_alert(df_all, storm_type_options):
     date = top_impact['date']
 
     # Set information to send email
-    FROM = 'stormspyder.alerts@gmail.com'
+    FROM = {'stormspyder.alerts@gmail.com': 'StormSpyder'}
     TO = ["jessicakristenr@gmail.com", "elisabeth.stephens@reading.ac.uk"] # Change this as needed
+    #TO = ["jessicakristenr@gmail.com", "jess.rapson@rogers.com"] # For testing
     APP_PASSWORD = "blsz ardo uicy qfnx"
     SUBJECT = f"{storm_type.capitalize()} alert: {impact} estimated impacted in {regions} on {date}"
     IMAGE_PATH = 'temp/' + get_key_by_value(storm_type_options, storm_type) + '/' + date + '.png'
     CSV_PATH = f"{today_date}-storm-alert.csv"
-    table_html = data.to_html(index=False).replace("\n", "")
+
+    # Create the numbered list of alerts
+    alert_list = "<ol>"
+    for n in range(len(df_all)):
+        alert = format_alert(df_all, n)
+        alert_list += f"<li>{alert}</li>"
+    alert_list += "</ol>"
 
     # Prepare the message
-    message_part1 = """
-    <p>Dear recipient,</p>
-    <p>Please find below the alert details:</p>
-    """
-    message_part2 = f"""
-    <p>{storm_type.capitalize()} forecast for {date}</p>
-    """
-    message_part3 = """
-    <p>Best regards,<br>StormSpyder Alerts Bot</p>
+    message_html = f"""
+    <html>
+      <body>
+        <p>Dear recipient,</p>
+        <p>The following tropical storm events have been forecast by the ECMWF:</p>
+        {alert_list}
+        <p>{storm_type.capitalize()} forecast for {date}:</p>
+        <img src="cid:image.png">
+        <p>To learn more about how this tool works, <a href="https://github.com/rapsoj/StormSpyder/tree/main">click here</a>.</p>
+        <p>To unsubscribe from future alerts, send a message to <a href="mailto:stormspyder.alerts@gmail.com?subject=UNSUBSCRIBE">stormspyder.alerts@gmail.com</a> with the subject line "UNSUBSCRIBE".</p>
+        <p>Best regards,<br>StormSpyder</p>
+      </body>
+    </html>
     """
 
     # Send the email with attachments
     yag = yagmail.SMTP(FROM, APP_PASSWORD)
     yag.send(
-        to=TO,
+        bcc=TO,
         subject=SUBJECT,
-        contents=[message_part1, table_html, message_part2, yagmail.inline(IMAGE_PATH), message_part3],
+        contents=[message_html, yagmail.inline(IMAGE_PATH)],
         attachments=CSV_PATH
     )
     print("---Email sent successfully---")
@@ -457,7 +487,7 @@ def main():
         shutil.rmtree('temp')
 
     # Loop through storm types
-    storm_type_options = {'genesis_ts': 'tropical storm', 'genesis_td': 'tropical cyclone', 'genesis_hr': 'hurricane'}
+    storm_type_options = {'genesis_ts': 'tropical storm', 'genesis_hr': 'hurricane'}
     for storm_type in storm_type_options.keys():
 
         # Print progress
@@ -495,6 +525,12 @@ def main():
         print('---------------------------------------------------------------------------------')
 
     print(datetime.now().time().strftime("%H:%M:%S"))
+
+    # Remove empty rows
+    df_all = df_all.dropna()
+
+    # Remove rows with less than 100 people estimated impacted
+    df_all = df_all[df_all['expected_impact'] >= 100]
 
     # Send emails
     send_email_alert(df_all, storm_type_options)
