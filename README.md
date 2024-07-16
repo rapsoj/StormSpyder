@@ -6,11 +6,11 @@ This tool is intended for use by humanitarian and global development agencies to
 
 ## How it Works
 
-StormSpyder scrapes the [ECMWF tropical storm genesis website](https://charts.ecmwf.int/products/medium-tc-genesis?base_time=202406200000&layer_name=genesis_ts&projection=opencharts_global&valid_time=202406230000) for daily nine-day forecasts of tropical storms, tropical cyclones, and hurricanes. The free version of these forecasts is only available as an image. StormSpyder digitises these images by georeferencing the map with a real-world map of the same cylindrical projection. It then detectes coloured pixels indicating forecast probabilities of the storm events. 
+StormSpyder scrapes the [ECMWF tropical storm genesis website](https://charts.ecmwf.int/products/medium-tc-genesis?base_time=202406200000&layer_name=genesis_ts&projection=opencharts_global&valid_time=202406230000) for daily nine-day forecasts of tropical storms, tropical cyclones, and hurricanes. The free version of these forecasts is only available as an image. StormSpyder digitises these images by georeferencing the map with a real-world map of the same cylindrical projection. It then detects coloured pixels indicating forecast probabilities of the storm events. 
 
 ![website](images/website.png)
 
-These strike probabilities are then intersected with a 2.km resolution gridden population map to calcualte the expected number of people impactd by the storm events (equal to the forecasted probabilities multiplied by the population in the regions that intersect with the forecasted storm).
+These strike probabilities are then intersected with a 2.km resolution gridded population map to calculate the expected number of people impacted by the storm events (equal to the forecasted probabilities multiplied by the population in the regions that intersect with the forecasted storm).
 
 ![pop_map](images/gridded-pop-map.png)
 
