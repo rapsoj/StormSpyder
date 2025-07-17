@@ -40,7 +40,14 @@ chrome_options = Options()
 chrome_options.add_argument("--headless")
 chrome_options.binary_location = "/usr/bin/google-chrome-stable"
 chromedriver_path = "/usr/bin/chromedriver"
+service = service=ChromeService(ChromeDriverManager().install())
 
+# #### FOR LOCAL TESTING ####
+# base_path = ChromeDriverManager().install()
+# base_dir = os.path.dirname(base_path)
+# service = ChromeService(executable_path=f"{base_dir}/chromedriver")
+# chrome_options = webdriver.ChromeOptions()
+# driver = webdriver.Chrome(service=service, options=chrome_options)
 
 # Define function to download images from ECMWF website
 def download_images(storm_type):
@@ -53,7 +60,7 @@ def download_images(storm_type):
         os.makedirs(save_dir)
     
     # URL of the website
-    url = "https://charts.ecmwf.int/products/medium-tc-genesis"
+    url = f"https://charts.ecmwf.int/products/medium-tc-genesis?layer_name={storm_type}"
     
     # XPaths for the relevant interactions
     dimensions_xpath = '//span[contains(text(), "Select dimensions")]'
@@ -64,39 +71,11 @@ def download_images(storm_type):
     next_button_xpath = '//*[@id="root"]/div/div/div/div[3]/div/div[2]/div[1]/div/div/div/div[3]/div[2]/div/button[4]'
 
     # Initialize the webdriver
-    driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()), options=chrome_options)
+    driver = webdriver.Chrome(service=service, options=chrome_options)
     driver.get(url)
     
     # Wait for the page to load
     time.sleep(1)
-
-    if storm_type != 'genesis_ts':
-        try:
-
-            # Wait for the dimensions button to be clickable and click it
-            select_dimensions_button = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, dimensions_xpath)))
-            select_dimensions_button.click()
-        
-            # Wait for the dropdown to be clickable and click it
-            dropdown = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, dropdown_xpath)))
-            dropdown.click()
-        
-            # Find and click on the storm type option
-            storm_type_xpath = storm_type_xpath_template.format(storm_type)
-            storm_type_element = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, storm_type_xpath)))
-            storm_type_element.click()
-        
-            # Wait for the close button to be clickable and click it
-            close_button = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, close_xpath)))
-            close_button.click()
-    
-            # Wait for the page to load after selecting options
-            WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, image_xpath_template.format(1))))
-    
-        except (TimeoutException, NoSuchElementException) as e:
-            print(f"An error occurred: {e}")
-            driver.quit()
-            raise
     
     # Loop to download each image
     for i in range(1, 10):  # Assuming there are 9 images
@@ -418,7 +397,7 @@ def send_email_alert(df_all, storm_type_options):
     # Set information to send email
     FROM = {'stormspyder.alerts@gmail.com': 'StormSpyder'}
     TO = ["jessicakristenr@gmail.com", "elisabeth.stephens@reading.ac.uk"] # Change this as needed
-    #TO = ["jessicakristenr@gmail.com", "jess.rapson@rogers.com"] # For testing
+    # TO = ["jessicakristenr@gmail.com", "jess.rapson@rogers.com"] # For testing
     APP_PASSWORD = "blsz ardo uicy qfnx"
     SUBJECT = f"{storm_type.capitalize()} alert: {impact} estimated impacted in {regions} on {date}"
     IMAGE_PATH = 'temp/' + get_key_by_value(storm_type_options, storm_type) + '/' + date + '.png'

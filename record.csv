@@ -15,3 +15,8 @@ regions,expected_impact,date,storm_type,reported
 ,,,,
 ,,,,
 ,,,,
+"Vietnam, Lao People's Democratic Republic, China",193248.55799694068,Tue 22 Jul 2025 00 UTC (T+120),hurricane,2025-07-17
+"China, Taiwan, Philippines",133971.4677795411,Mon 21 Jul 2025 00 UTC (T+96),hurricane,2025-07-17
+"Lao People's Democratic Republic, Vietnam, China",132059.59091148377,Wed 23 Jul 2025 00 UTC (T+144),hurricane,2025-07-17
+"China, Taiwan, Philippines",88206.67596664428,Sun 20 Jul 2025 00 UTC (T+72),hurricane,2025-07-17
+Vietnam,19374.901553344727,Thu 24 Jul 2025 00 UTC (T+168),hurricane,2025-07-17
