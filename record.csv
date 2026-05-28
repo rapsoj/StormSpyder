@@ -20,3 +20,15 @@ regions,expected_impact,date,storm_type,reported
 "Lao People's Democratic Republic, Vietnam, China",132059.59091148377,Wed 23 Jul 2025 00 UTC (T+144),hurricane,2025-07-17
 "China, Taiwan, Philippines",88206.67596664428,Sun 20 Jul 2025 00 UTC (T+72),hurricane,2025-07-17
 Vietnam,19374.901553344727,Thu 24 Jul 2025 00 UTC (T+168),hurricane,2025-07-17
+"India, Bangladesh, Myanmar",467717.1875,Tue 02 Jun 2026 06 UTC (T+120),tropical storm,2026-05-28
+"India, Bangladesh, Myanmar",360614.34375,Mon 01 Jun 2026 06 UTC (T+96),tropical storm,2026-05-28
+"Myanmar, India, Bangladesh",254720.0625,Wed 03 Jun 2026 06 UTC (T+144),tropical storm,2026-05-28
+"Japan, Taiwan",163982.3125,Wed 03 Jun 2026 06 UTC (T+144),tropical storm,2026-05-28
+"Bangladesh, Myanmar, India",127742.046875,Sun 31 May 2026 06 UTC (T+72),tropical storm,2026-05-28
+"Vietnam, Lao People's Democratic Republic, Cambodia",70028.4375,Tue 02 Jun 2026 06 UTC (T+120),tropical storm,2026-05-28
+"China, Vietnam, Cambodia, Lao People's Democratic Republic",67031.234375,Wed 03 Jun 2026 06 UTC (T+144),tropical storm,2026-05-28
+"Vietnam, Cambodia, Lao People's Democratic Republic",53470.8046875,Mon 01 Jun 2026 06 UTC (T+96),tropical storm,2026-05-28
+"Japan, Taiwan",44312.0078125,Tue 02 Jun 2026 06 UTC (T+120),tropical storm,2026-05-28
+"Vietnam, Cambodia",35885.671875,Sun 31 May 2026 06 UTC (T+72),tropical storm,2026-05-28
+Mexico,296.9632568359375,Wed 03 Jun 2026 06 UTC (T+144),tropical storm,2026-05-28
+Taiwan,185.78524780273438,Mon 01 Jun 2026 06 UTC (T+96),tropical storm,2026-05-28

@@ -42,11 +42,11 @@ chrome_options.binary_location = "/usr/bin/google-chrome-stable"
 chromedriver_path = "/usr/bin/chromedriver"
 service = service=ChromeService(ChromeDriverManager().install())
 
-# #### FOR LOCAL TESTING ####
+#### FOR LOCAL TESTING ####
 # base_path = ChromeDriverManager().install()
 # base_dir = os.path.dirname(base_path)
 # service = ChromeService(executable_path=f"{base_dir}/chromedriver")
-# chrome_options = webdriver.ChromeOptions()
+# chrome_options = webdriver.ChromeOptions() # not headless
 # driver = webdriver.Chrome(service=service, options=chrome_options)
 
 # Define function to download images from ECMWF website
@@ -101,8 +101,10 @@ def download_images(storm_type):
             with open(image_path, "wb") as f:
                 f.write(requests.get(image_url).content)
             
-            # Click the next button
-            next_button = driver.find_element(By.XPATH, next_button_xpath)
+            # Click the next button after delay
+            next_button = WebDriverWait(driver, 10).until(
+                EC.element_to_be_clickable((By.XPATH, next_button_xpath))
+            )
             next_button.click()
             
             # Wait for the page to load
