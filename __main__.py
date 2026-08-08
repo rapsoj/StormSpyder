@@ -381,6 +381,10 @@ def format_alert(df_all, n):
 
 # Define function to send email alert
 def send_email_alert(df_all, storm_type_options):
+    if df_all.empty:
+        print("---No qualifying storm events found; skipping email alert---")
+        return
+
     # Create dataframe for storm events that intersect with populated areas
     today_date = datetime.today().strftime('%Y-%m-%d')
     data = df_all.sort_values('expected_impact', ascending=False)
