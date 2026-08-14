@@ -1,4 +1,5 @@
 import os
+import shutil
 
 try:
     from selenium import webdriver
@@ -32,7 +33,7 @@ def build_browser_settings(local_testing=False):
     else:
         chrome_options = Options()
         chrome_options.add_argument("--headless")
-        chrome_options.binary_location = "/usr/bin/google-chrome-stable"
+        chrome_options.binary_location = _find_chrome_binary()
         service = ChromeService(ChromeDriverManager().install())
 
     return service, chrome_options
@@ -41,3 +42,31 @@ def build_browser_settings(local_testing=False):
 def get_webdriver(local_testing=False):
     service, chrome_options = build_browser_settings(local_testing=local_testing)
     return webdriver.Chrome(service=service, options=chrome_options), service, chrome_options
+
+
+def _find_chrome_binary():
+    # Allow explicit override first for CI or custom installs.
+    env_path = os.environ.get("CHROME_BIN")
+    if env_path and os.path.exists(env_path):
+        return env_path
+
+    candidates = [
+        "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
+        "/Applications/Chromium.app/Contents/MacOS/Chromium",
+        "/usr/bin/google-chrome-stable",
+        "/usr/bin/google-chrome",
+        "/usr/bin/chromium-browser",
+        "/usr/bin/chromium",
+    ]
+
+    for path in candidates:
+        if os.path.exists(path):
+            return path
+
+    # Fall back to PATH lookups as a last resort.
+    for binary_name in ["google-chrome-stable", "google-chrome", "chromium-browser", "chromium"]:
+        discovered = shutil.which(binary_name)
+        if discovered:
+            return discovered
+
+    raise RuntimeError("Chrome binary not found. Install Chrome/Chromium or set CHROME_BIN.")
